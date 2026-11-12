@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Utility - SMUN</title>
+    <link rel="icon" type="image/png" href="fav.png">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
+    <style>
+        #particles-js {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+    </style>
+    <style>
+        :root{
+          --gold:#d4af37;
+          --red:#b11226;
+          --text:#f4ead1;
+          --border:rgba(212,175,55,0.14);
+          --panel:rgba(16,16,18,0.1);
+          --shadow:0 18px 60px rgba(0,0,0,0.45);
+        }
+
+        *{box-sizing:border-box;margin:0;padding:0}
+        html,body{height:100%}
+        body{
+          background:
+            radial-gradient(circle at top left, rgba(177,18,38,0.16), transparent 28%),
+            radial-gradient(circle at top right, rgba(212,175,55,0.12), transparent 30%),
+            linear-gradient(180deg,#050505 0%, #0a0a0c 55%, #040404 100%);
+          color:var(--text);
+          overflow-x:hidden;
+        }
+
+        a{text-decoration:none;color:inherit}
+        button,input{font:inherit}
+
+        .shell{
+          width:min(1200px, calc(100% - 32px));
+          margin:0 auto;
+          padding-top:110px;
+          padding-bottom:40px;
+        }
+
+        .hero, .panel{
+          border:1px solid var(--border);
+          background:var(--panel);
+          border-radius:22px;
+          box-shadow:var(--shadow);
+        }
+
+        .hero{padding:32px;margin-bottom:20px}
+        .eyebrow{color:var(--gold);text-transform:uppercase;letter-spacing:.24em;font-size:.75rem;margin-bottom:10px}
+        h1{font-size:clamp(2.5rem,5vw,4.5rem);line-height:1;color:#fff7e2}
+        .hero p:last-child{margin-top:14px;color:var(--muted);line-height:1.8;max-width:70ch}
+
+        .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+        .panel{padding:22px}
+        .panel-title{color:#fff2d2;text-transform:uppercase;letter-spacing:.12em;font-size:1rem;margin-bottom:18px}
+
+        .timer-display{min-height:220px;display:grid;place-items:center;border-radius:18px;border:1px solid rgba(255,255,255,0.05);background:linear-gradient(180deg, rgba(10,10,10,0.96), rgba(16,16,16,0.92))}
+        .time{font-size:clamp(3rem,8vw,5.5rem);font-weight:800;text-align:center}
+        .status{margin-top:10px;color:var(--muted);text-align:center;text-transform:uppercase;font-size:.8rem;letter-spacing:.12em}
+        .progress{margin-top:14px;height:8px;background:rgba(255,255,255,0.05);border-radius:999px;overflow:hidden}
+        .progress span{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--red),var(--gold))}
+
+        .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+        .chip,.btn{border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.03);color:var(--text);padding:11px 16px;border-radius:999px;cursor:pointer}
+        .chip.active{border-color:rgba(212,175,55,0.3);background:rgba(212,175,55,0.1)}
+        .btn.primary{background:linear-gradient(135deg,#f0d47d,#d4af37);color:#111;font-weight:600}
+        .input{flex:1;min-width:180px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);color:var(--text);border-radius:14px;padding:12px 14px}
+
+        .speaker-box{border:1px solid rgba(255,255,255,0.06);border-radius:18px;padding:16px;margin-bottom:12px}
+        .label{color:var(--gold);font-size:.72rem;text-transform:uppercase;letter-spacing:.16em;margin-bottom:8px}
+        .name{font-size:1.1rem;font-weight:700}
+        .delegate > span{min-width:0;flex:1 1 auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block}
+
+        .delegate{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px;border-radius:16px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);margin-top:10px;overflow:hidden;min-width:0}
+        .delegate-controls{display:flex;gap:8px;flex-shrink:0;align-items:center;white-space:nowrap}
+        .mini{
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.05);
+  color: var(--text);
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+        @media(max-width:900px){.grid{grid-template-columns:1fr}}
+    </style>
+</head>
+<body>
+<div id="particles-js" aria-hidden="true"></div>
+<nav class="nav" role="navigation" aria-label="Main navigation">
+    <div class="nav-inner">
+        <a class="nav-brand" href="index.html">SMUN</a>
+
+        <button class="nav-toggle" id="navToggle" aria-controls="navList" aria-expanded="false" aria-label="Open menu">
+        <span class="hamburger">
+          <span class="bar bar1"></span>
+          <span class="bar bar2"></span>
+          <span class="bar bar3"></span>
+        </span>
+        </button>
+
+        <ul id="navList" class="nav-list" role="menubar" aria-label="Primary">
+            <li role="none"><a role="menuitem" class="nav-link" href="index.html">Home</a></li>
+            <li role="none"><a role="menuitem" class="nav-link" href="register.html">Register</a></li>
+            <li role="none"><a role="menuitem" class="nav-link" href="committees.html">Committees</a></li>
+            <li role="none"><a role="menuitem" class="nav-link" href="secretariat.html">Secretariat</a></li>
+            <li role="none"><a role="menuitem" class="nav-link active" href="utility.html">Utility</a></li>
+            <li role="none"><a role="menuitem" class="nav-link" href="contact.html">Contact Us</a></li>
+        </ul>
+    </div>
+</nav>
+
+<main class="shell" id="top">
+        <section class="grid">
+        <section class="panel" id="timer">
+            <h2 class="panel-title">Timer Runner</h2>
+            <div class="timer-display">
+                <div>
+                    <div class="time" id="timeDisplay">15:00</div>
+                    <div class="status" id="timerStatus">Paused</div>
+                </div>
+            </div>
+            <div class="progress"><span id="progressBar"></span></div>
+
+            <div class="row" id="presetButtons">
+                <button class="chip active" data-min="15">15 min</button>
+                <button class="chip" data-min="30">30 min</button>
+                <button class="chip" data-min="3">3 min</button>
+                <button class="chip" data-min="5">5 min</button>
+            </div>
+
+            <div class="row">
+                <input type="number" id="customMinutes" class="input" placeholder="Custom minutes">
+                <button class="btn" onclick="setCustomTimer()">Set</button>
+            </div>
+
+            <div class="row">
+                <button class="btn primary" onclick="toggleTimer()">Start / Pause</button>
+                <button class="btn" onclick="resetTimer()">Reset</button>
+            </div>
+        </section>
+
+        <section class="panel" id="records">
+            <h2 class="panel-title">Delegate Record System</h2>
+
+            <div class="speaker-box">
+                <div class="label">Now Speaking</div>
+                <div class="name" id="nowSpeaking">Delegate A</div>
+            </div>
+
+            <div class="speaker-box">
+                <div class="label">Next Speaker</div>
+                <div class="name" id="nextSpeaking">Delegate B</div>
+            </div>
+
+            <div class="row">
+                <input type="text" id="delegateInput" class="input" placeholder="Enter delegate name">
+                <button class="btn" onclick="addDelegate()">Add</button>
+            </div>
+
+            <div id="delegateList"></div>
+        </section>
+    </section>
+</main>
+
+<script>
+    let totalSeconds = 900;
+    let remainingSeconds = 900;
+    let timerRunning = false;
+    let timer;
+
+    let delegates = ["Delegate A", "Delegate B", "Delegate C"];
+
+    function formatTime(seconds){
+      let m = String(Math.floor(seconds / 60)).padStart(2,'0');
+      let s = String(seconds % 60).padStart(2,'0');
+      return `${m}:${s}`;
+    }
+
+    function updateTimer(){
+      document.getElementById('timeDisplay').textContent = formatTime(remainingSeconds);
+      document.getElementById('timerStatus').textContent = timerRunning ? 'Running' : (remainingSeconds === 0 ? 'Time Ended' : 'Paused');
+      let progress = ((totalSeconds - remainingSeconds)/totalSeconds)*100;
+      document.getElementById('progressBar').style.width = progress + '%';
+    }
+
+    function toggleTimer(){
+      if(timerRunning){
+        clearInterval(timer);
+        timerRunning = false;
+      } else {
+        timerRunning = true;
+        timer = setInterval(() => {
+          if(remainingSeconds > 0){
+            remainingSeconds--;
+            updateTimer();
+          } else {
+            clearInterval(timer);
+            timerRunning = false;
+            updateTimer();
+          }
+        },1000);
+      }
+      updateTimer();
+    }
+
+    function resetTimer(){
+      clearInterval(timer);
+      timerRunning = false;
+      remainingSeconds = totalSeconds;
+      updateTimer();
+    }
+
+    document.querySelectorAll('[data-min]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.chip').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        totalSeconds = parseInt(btn.dataset.min) * 60;
+        remainingSeconds = totalSeconds;
+        resetTimer();
+      });
+    });
+
+    function setCustomTimer(){
+      const value = parseInt(document.getElementById('customMinutes').value);
+      if(value && value > 0){
+        totalSeconds = value * 60;
+        remainingSeconds = totalSeconds;
+        resetTimer();
+      }
+    }
+
+    function renderDelegates(){
+      document.getElementById('nowSpeaking').textContent = delegates[0] || 'None';
+      document.getElementById('nextSpeaking').textContent = delegates[1] || 'Waiting';
+
+      const list = document.getElementById('delegateList');
+      list.innerHTML = '';
+
+      delegates.forEach((name,index) => {
+        const div = document.createElement('div');
+        div.className = 'delegate';
+        div.innerHTML = `
+          <span>${index + 1}. ${name}</span>
+          <div class="delegate-controls">
+            <button class="mini" onclick="moveUp(${index})">↑</button>
+            <button class="mini" onclick="moveDown(${index})">↓</button>
+            <button class="mini" onclick="removeDelegate(${index})">✕</button>
+          </div>
+        `;
+        list.appendChild(div);
+      });
+    }
+
+    function addDelegate(){
+      const input = document.getElementById('delegateInput');
+      const name = input.value.trim();
+      if(name){
+        delegates.push(name);
+        input.value = '';
+        renderDelegates();
+      }
+    }
+
+    function removeDelegate(index){
+      delegates.splice(index,1);
+      renderDelegates();
+    }
+
+    function moveUp(index){
+      if(index === 0) return;
+      [delegates[index], delegates[index-1]] = [delegates[index-1], delegates[index]];
+      renderDelegates();
+    }
+
+    function moveDown(index){
+      if(index === delegates.length - 1) return;
+      [delegates[index], delegates[index+1]] = [delegates[index+1], delegates[index]];
+      renderDelegates();
+    }
+
+    const navToggle = document.getElementById('navToggle');
+    const navList = document.getElementById('navList');
+
+    if (navToggle && navList) {
+      navToggle.addEventListener('click', () => {
+        const isOpen = navToggle.getAttribute('aria-expanded') === 'true';
+        navToggle.setAttribute('aria-expanded', String(!isOpen));
+        navList.classList.toggle('open');
+      });
+    }
+
+    updateTimer();
+    renderDelegates();
+</script>
+<script>
+    particlesJS('particles-js', {
+        particles: {
+            number: {
+                value: 250,
+                density: {
+                    enable: true,
+                    value_area: 900
+                }
+            },
+            color: {
+                value: '#d4af37'
+            },
+            shape: {
+                type: 'circle'
+            },
+            opacity: {
+                value: 0.4,
+                random: true
+            },
+            size: {
+                value: 4,
+                random: true
+            },
+            line_linked: {
+                enable: true,
+                distance: 150,
+                color: '#d4af37',
+                opacity: 0.12,
+                width: 1
+            },
+            move: {
+                enable: true,
+                speed: 1.2,
+                direction: 'none',
+                random: false,
+                straight: false,
+                out_mode: 'out',
+                bounce: false
+            }
+        },
+        interactivity: {
+            detect_on: 'canvas',
+            events: {
+                onhover: {
+                    enable: true,
+                    mode: 'repulse'
+                },
+                onclick: {
+                    enable: true,
+                    mode: 'push'
+                },
+                resize: true
+            },
+            modes: {
+                repulse: {
+                    distance: 120,
+                    duration: 0.4
+                },
+                push: {
+                    particles_nb: 3
+                }
+            }
+        },
+        retina_detect: false
+    });
+</script>
+</body>
+</html>

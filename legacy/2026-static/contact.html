@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Contact Us - SMUN</title>
+    <link rel="icon" type="image/png" href="fav.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        #particles-js {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+<div id="particles-js" aria-hidden="true"></div>
+<nav class="nav" role="navigation" aria-label="Main navigation">
+    <div class="nav-inner">
+        <a class="nav-brand" href="index.html">SMUN</a>
+
+        <button class="nav-toggle" id="navToggle" aria-controls="navList" aria-expanded="false" aria-label="Open menu">
+        <span class="hamburger">
+          <span class="bar bar1"></span>
+          <span class="bar bar2"></span>
+          <span class="bar bar3"></span>
+        </span>
+        </button>
+
+        <ul id="navList" class="nav-list" role="menubar" aria-label="Primary">
+            <li role="none"><a role="menuitem" class="nav-link" href="index.html">Home</a></li>
+            <li role="none"><a role="menuitem" class="nav-link" href="register.html">Register</a></li>
+            <li role="none"><a role="menuitem" class="nav-link" href="committees.html">Committees</a></li>
+            <li role="none"><a role="menuitem" class="nav-link" href="secretariat.html">Secretariat</a></li>
+            <li role="none"><a role="menuitem" class="nav-link" href="utility.html">Utility</a></li>
+            <li role="none"><a role="menuitem" class="nav-link active" href="contact.html">Contact Us</a></li>
+        </ul>
+    </div>
+</nav>
+
+<main id="home">
+    <section class="hero" id="contact">
+        <p class="eyebrow">Contact Us</p>
+        <h1>Reach the SMUN team directly.</h1>
+        <p>
+            For conference-related queries, coordination, or registration support, feel free to contact the following numbers.
+
+        </p>
+
+        <div class="contacts">
+            <article class="card">
+                <h2>Secretary General</h2>
+                <a class="phone" href="tel:+917439838772">
+                    <span class="label">Phone Number</span>
+                    <span class="number">+91 74398 38772</span>
+                </a>
+                <div class="footer-note">Samrat Pratap Singh</div>
+            </article>
+            <article class="card">
+                <h2>Registration Support</h2>
+                <a class="phone" href="tel:+917439481039">
+                    <span class="label">Phone Number</span>
+                    <span class="number">+91 74394 81039</span>
+                </a>
+                <div class="footer-note">Akshat Jaiswal</div>
+            </article>
+
+            <article class="card">
+                <h2>Delegate Support</h2>
+                <a class="phone" href="tel:+918334983684">
+                    <span class="label">Phone Number</span>
+                    <span class="number">+91 83349 83684</span>
+                </a>
+                <div class="footer-note">Ashmit Seal</div>
+            </article>
+            <article class="card">
+                <h2>Email Support</h2>
+                <a class="phone" href="mailto:secretariat@smun.in">
+                    <span class="label">Email Address</span>
+                    <span class="number">secretariat@smun.in</span>
+                </a>
+            </article>
+        </div>
+    </section>
+    <footer class="footer">
+            <div class="footer-content">
+                <span>©SMUN 2026 | All Rights Reserved </span>
+
+                <span class="footer-credit">
+      made with <span class="heart">♥</span> by
+      <a href="https://instagram.com/yikes._.ahmed" target="_blank">ahmed</a>
+    </span>
+            </div>
+        </footer>
+</main>
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script>
+    particlesJS('particles-js', {
+        particles: {
+            number: {
+                value: 250,
+                density: {
+                    enable: true,
+                    value_area: 900
+                }
+            },
+            color: {
+                value: '#d4af37'
+            },
+            shape: {
+                type: 'circle'
+            },
+            opacity: {
+                value: 0.4,
+                random: true
+            },
+            size: {
+                value: 4,
+                random: true
+            },
+            line_linked: {
+                enable: true,
+                distance: 150,
+                color: '#d4af37',
+                opacity: 0.12,
+                width: 1
+            },
+            move: {
+                enable: true,
+                speed: 1.2,
+                direction: 'none',
+                random: false,
+                straight: false,
+                out_mode: 'out',
+                bounce: false
+            }
+        },
+        interactivity: {
+            detect_on: 'canvas',
+            events: {
+                onhover: {
+                    enable: true,
+                    mode: 'repulse'
+                },
+                onclick: {
+                    enable: true,
+                    mode: 'push'
+                },
+                resize: true
+            },
+            modes: {
+                repulse: {
+                    distance: 120,
+                    duration: 0.4
+                },
+                push: {
+                    particles_nb: 3
+                }
+            }
+        },
+        retina_detect: false
+    });
+</script>
+<script>
+    const navToggle = document.getElementById('navToggle');
+    const navList = document.getElementById('navList');
+
+    if (navToggle && navList) {
+      navToggle.addEventListener('click', () => {
+        const isOpen = navToggle.getAttribute('aria-expanded') === 'true';
+        navToggle.setAttribute('aria-expanded', String(!isOpen));
+        navList.classList.toggle('open');
+      });
+    }
+</script>
+<script type="module">
+    import('./cursor-zigzag.js').then(({ createCursorZigzag }) => createCursorZigzag({ zIndex: 9999 }));
+</script>
+</body>
+</html>

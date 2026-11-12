@@ -1,0 +1,825 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Committee - SMUN</title>
+<link rel="icon" type="image/png" href="fav.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        :root{
+          --gold:#d4af37;
+          --gold-soft:#f2d57c;
+          --red:#b31228;
+          --text:#f5f1e6;
+          --panel:rgba(7,7,7,0.98);
+          --panel-border:rgba(212,175,55,0.22);
+          --nav-height:74px;
+        }
+
+        *{ box-sizing:border-box; }
+
+        html, body{
+          margin:0;
+          min-height:100%;
+          background:#000;
+          font-family:'Poppins',sans-serif;
+          color:var(--text);
+          overflow-x:hidden;
+        }
+
+        body{
+          position:relative;
+          background:
+            radial-gradient(circle at 50% 18%, rgba(212,175,55,0.12), transparent 34%),
+            radial-gradient(circle at 20% 50%, rgba(179,18,40,0.10), transparent 28%),
+            #000;
+        }
+
+        #particles-js{
+          position:fixed;
+          inset:0;
+          z-index:0;
+          pointer-events:none;
+        }
+
+        main{
+          position:relative;
+          z-index:1;
+        }
+
+        .committee-hero{
+          min-height:calc(100vh - var(--nav-height));
+          display:grid;
+          place-items:start center;
+          padding:calc(var(--nav-height) + 18px) clamp(10px, 2vw, 24px) 24px;
+          position:relative;
+          isolation:isolate;
+        }
+
+        .world-bg{
+          position:absolute;
+          inset:0;
+          background:url('world-map.png') center/cover no-repeat;
+          opacity:0.18;
+          filter:contrast(1.2) saturate(0.95);
+          z-index:-2;
+        }
+
+        .world-bg::after{
+          content:'';
+          position:absolute;
+          inset:0;
+          background:
+            linear-gradient(180deg, rgba(0,0,0,0.10), rgba(0,0,0,0.56)),
+            radial-gradient(circle at center, transparent 0 38%, rgba(0,0,0,0.56) 72%);
+        }
+
+        .orbit-stage{
+          position:relative;
+          width:min(100%, min(100vh, 1200px));
+          aspect-ratio:1 / 1;
+          margin-inline:auto;
+        }
+
+        .emblem-orbit{
+          position:absolute;
+          inset:0;
+          transform: translate(20vw, 15vh);
+          pointer-events:none;
+        }
+
+        .center-logo{
+          position:absolute;
+          top:50%;
+          left:50%;
+          transform:translate(-50%,-50%);
+          width:min(38%, 320px);
+          pointer-events:none;
+          z-index:2;
+        }
+
+        .center-logo img{
+          display:block;
+          width:100%;
+          height:auto;
+          filter:drop-shadow(0 0 28px rgba(212,175,55,0.35));
+        }
+
+        .committee-btn{
+          position:absolute;
+          appearance:none;
+          border:0;
+          background:transparent;
+          padding:0;
+          color:inherit;
+          cursor:pointer;
+          text-align:center;
+          width: clamp(180px, 18vw, 260px);
+          transition:filter .2s ease, opacity .2s ease;
+          z-index:2;
+          pointer-events:auto;
+        }
+
+        .committee-btn:hover,
+        .committee-btn:focus-visible{
+          outline:none;
+          filter:drop-shadow(0 0 16px rgba(212,175,55,0.22));
+        }
+
+        .emblem-frame{
+          width:100%;
+          aspect-ratio:1 / 1;
+          display:grid;
+          place-items:center;
+          border-radius:50%;
+          background:
+            radial-gradient(circle at 35% 35%, rgba(255,255,255,0.05), transparent 45%),
+            radial-gradient(circle at 50% 55%, rgba(212,175,55,0.08), transparent 62%);
+          border:1px solid rgba(212,175,55,0.18);
+          box-shadow:
+            inset 0 0 24px rgba(212,175,55,0.08),
+            0 0 18px rgba(0,0,0,0.3);
+          backdrop-filter:blur(2px);
+          transition:border-color .2s ease, box-shadow .2s ease;
+        }
+
+        .committee-btn:hover .emblem-frame,
+        .committee-btn:focus-visible .emblem-frame{
+          border-color:rgba(212,175,55,0.36);
+          box-shadow:
+            inset 0 0 24px rgba(212,175,55,0.08),
+            0 0 24px rgba(179,18,40,0.16);
+        }
+
+        .committee-btn img{
+          width:82%;
+          height:auto;
+          display:block;
+          filter:brightness(1.12) drop-shadow(0 0 10px rgba(212,175,55,0.28));
+          user-select:none;
+          -webkit-user-drag:none;
+        }
+
+        .committee-label{
+          display:block;
+          margin-top:10px;
+          color:var(--gold-soft);
+          font-size:clamp(0.62rem, 0.9vw, 0.85rem);
+          line-height:1.2;
+          letter-spacing:0.08em;
+          text-transform:uppercase;
+          text-wrap:balance;
+        }
+
+        .c1 { transform: rotate(0deg) translate(350px) rotate(0deg); }
+        .c2 { transform: rotate(51deg) translate(350px) rotate(-51deg); }
+        .c3 { transform: rotate(102deg) translate(350px) rotate(-102deg); }
+        .c4 { transform: rotate(153deg) translate(350px) rotate(-153deg); }
+        .c5 { transform: rotate(204deg) translate(350px) rotate(-204deg); }
+        .c6 { transform: rotate(255deg) translate(350px) rotate(-255deg); }
+        .c7 { transform: rotate(306deg) translate(350px) rotate(-306deg); }
+
+        .panel-toggle-tag{
+          position:absolute;
+          left:50%;
+          bottom:5%;
+          transform:translateX(-50%);
+          padding:12px clamp(16px, 2vw, 26px);
+          border:1px solid rgba(179,18,40,0.75);
+          border-radius:14px;
+          color:#ff646f;
+          letter-spacing:0.18em;
+          text-transform:uppercase;
+          background:rgba(179,18,40,0.10);
+          box-shadow:0 0 22px rgba(179,18,40,0.26);
+          font-size:clamp(0.72rem, 0.9vw, 0.9rem);
+          text-align:center;
+          z-index:3;
+          pointer-events:none;
+        }
+
+        .side-panel{
+          position: fixed;
+          top: var(--nav-height);
+          left: 0;
+          right: 0;
+          bottom: 0;
+          width: 100vw;
+          height: auto;
+          border:0;
+          border-radius:0;
+          background:
+            radial-gradient(circle at top, rgba(212,175,55,0.06), transparent 30%),
+            linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01)),
+            var(--panel);
+          box-shadow:none;
+          backdrop-filter:none;
+          padding:clamp(14px, 2.2vw, 30px);
+          display:flex;
+          flex-direction:column;
+          overflow:auto;
+          z-index:12;
+          opacity:0;
+          pointer-events:none;
+          transform:translateY(12px);
+          transition:opacity .22s ease, transform .22s ease;
+        }
+
+        .side-panel.open{
+          opacity:1;
+          pointer-events:auto;
+          transform:translateY(0);
+        }
+
+        .panel-head{
+          display:flex;
+          justify-content:space-between;
+          align-items:flex-start;
+          gap:14px;
+          margin-bottom:14px;
+        }
+
+        .panel-kicker{
+          color:var(--gold-soft);
+          letter-spacing:0.18em;
+          text-transform:uppercase;
+          font-size:0.76rem;
+          margin-bottom:8px;
+        }
+
+        .panel-title{
+          margin:0;
+          font-family:'Montserrat',sans-serif;
+          font-size:clamp(1.2rem, 2.4vw, 2rem);
+          line-height:1;
+        }
+
+        .panel-close{
+          width:40px;
+          height:40px;
+          border-radius:12px;
+          border:1px solid rgba(212,175,55,0.22);
+          background:rgba(255,255,255,0.03);
+          color:var(--gold-soft);
+          cursor:pointer;
+          font-size:1rem;
+          line-height:1;
+          display:grid;
+          place-items:center;
+          padding:0;
+          flex:0 0 auto;
+          align-self:flex-start;
+        }
+
+        .panel-divider{
+          height:1px;
+          background:linear-gradient(90deg, transparent, rgba(212,175,55,0.38), transparent);
+          margin:10px 0 16px;
+        }
+
+        .panel-overview{
+          color:var(--muted);
+          line-height:1.8;
+          font-size:0.96rem;
+          margin:0 0 16px;
+          max-width:72ch;
+        }
+
+        .panel-grid{
+          display:grid;
+          gap:12px;
+          grid-template-columns:repeat(3, minmax(0, 1fr));
+        }
+
+        .panel-card{
+          border-radius:18px;
+          border:1px solid rgba(212,175,55,0.16);
+          background:rgba(255,255,255,0.03);
+          padding:16px;
+          min-height:132px;
+        }
+
+        .panel-card small{
+          display:block;
+          margin-bottom:8px;
+          color:var(--gold-soft);
+          letter-spacing:0.14em;
+          text-transform:uppercase;
+          font-size:0.72rem;
+        }
+
+        .panel-card strong,
+        .panel-card p,
+        .panel-card ul{
+          margin:0;
+          color:var(--text);
+        }
+
+        .panel-card p,
+        .panel-card li{
+          color:var(--muted);
+          line-height:1.7;
+          font-size:0.94rem;
+        }
+
+        .panel-card ul{
+          padding-left:18px;
+          display:grid;
+          gap:8px;
+        }
+
+        .panel-docs{
+          margin-top:auto;
+          padding-top:16px;
+          display:grid;
+          grid-template-columns:repeat(3, minmax(0, 1fr));
+          gap:10px;
+        }
+
+        .panel-doc{
+          display:flex;
+          justify-content:space-between;
+          align-items:center;
+          gap:14px;
+          text-decoration:none;
+          color:var(--text);
+          border-radius:16px;
+          border:1px solid rgba(212,175,55,0.18);
+          background:linear-gradient(135deg, rgba(212,175,55,0.10), rgba(179,18,40,0.10));
+          padding:14px 16px;
+          transition:transform .2s ease, border-color .2s ease;
+          min-height:72px;
+        }
+
+        .panel-doc:hover{
+          transform:translateY(-2px);
+          border-color:rgba(212,175,55,0.35);
+        }
+
+        .panel-doc span{ display:block; }
+        .panel-doc .doc-title{ font-weight:700; letter-spacing:0.02em; }
+        .panel-doc .doc-sub{ color:var(--muted); font-size:0.82rem; margin-top:4px; }
+
+        .overlay{ display:none; }
+        .mobile-panel-handle{ display:none; }
+
+        @media (max-width: 1100px){
+          .panel-grid,
+          .panel-docs{
+            grid-template-columns:1fr;
+          }
+        }
+
+        @media (max-width: 860px){
+          .orbit-stage{
+            width:100%;
+            aspect-ratio:auto;
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            justify-content:flex-start;
+            gap:14px;
+            padding:12px 0 18px;
+          }
+
+          .emblem-orbit{
+            position:static;
+            transform:none;
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            gap:14px;
+            width:100%;
+          }
+
+          .center-logo{
+            position:static;
+            transform:none;
+            width:min(240px, 54vw);
+            margin:0 auto 4px;
+          }
+
+          .committee-btn{
+            position:static;
+            transform:none;
+            width:min(100%, 360px);
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            justify-content:center;
+            text-align:center;
+          }
+
+          .committee-label{
+            margin-top:8px;
+            font-size:0.72rem;
+          }
+
+          .panel-toggle-tag{
+            position:static;
+            transform:none;
+            width:min(100%, 360px);
+            margin:4px auto 0;
+          }
+
+          .c1, .c2, .c3, .c4, .c5, .c6, .c7{
+            top:auto;
+            right:auto;
+            bottom:auto;
+            left:auto;
+          }
+
+          .committee-hero{
+            min-height:auto;
+            padding:calc(var(--nav-height) + 10px) 12px 24px;
+          }
+        }
+
+        @media (max-width: 520px){
+          .center-logo{
+            width:min(210px, 62vw);
+          }
+
+          .committee-btn{
+            width:min(100%, 320px);
+          }
+
+          .committee-btn img{
+            width:72%;
+          }
+
+          .panel-title{
+            font-size:1.15rem;
+          }
+
+          .panel-overview,
+          .panel-card p,
+          .panel-card li,
+          .panel-doc .doc-sub{
+            font-size:0.88rem;
+          }
+
+          .panel-card{
+            padding:14px;
+            min-height:auto;
+          }
+
+          .panel-doc{
+            padding:12px 14px;
+          }
+        }
+
+        @media (max-width: 420px){
+          .panel-close{
+            width:38px;
+            height:38px;
+            font-size:0.95rem;
+          }
+
+          .panel-head{
+            gap:10px;
+          }
+
+          .committee-btn{
+            width:min(100%, 300px);
+          }
+
+          .panel-toggle-tag{
+            letter-spacing:0.12em;
+            padding:10px 14px;
+          }
+        }
+    </style>
+</head>
+
+<body>
+<div id="particles-js" aria-hidden="true"></div>
+<div class="overlay" id="overlay" aria-hidden="true"></div>
+
+<nav class="nav" role="navigation" aria-label="Main navigation">
+    <div class="nav-inner">
+        <a class="nav-brand" href="index.html">SMUN</a>
+
+        <button class="nav-toggle" id="navToggle" aria-controls="navList" aria-expanded="false" aria-label="Open menu">
+        <span class="hamburger">
+          <span class="bar bar1"></span>
+          <span class="bar bar2"></span>
+          <span class="bar bar3"></span>
+        </span>
+        </button>
+
+        <ul id="navList" class="nav-list" role="menubar" aria-label="Primary">
+            <li role="none"><a role="menuitem" class="nav-link" href="index.html">Home</a></li>
+            <li role="none"><a role="menuitem" class="nav-link" href="register.html">Register</a></li>
+            <li role="none"><a role="menuitem" class="nav-link active" href="a1.html">Committees</a></li>
+            <li role="none"><a role="menuitem" class="nav-link" href="secretariat.html">Secretariat</a></li>
+            <li role="none"><a role="menuitem" class="nav-link" href="utility.html">Utility</a></li>
+            <li role="none"><a role="menuitem" class="nav-link" href="contact.html">Contact Us</a></li>
+        </ul>
+    </div>
+</nav>
+
+<main>
+    <section class="committee-hero">
+        <div class="world-bg"></div>
+
+        <div class="orbit-stage" aria-label="Committee selector">
+            <div class="emblem-orbit" aria-hidden="false">
+                <button class="committee-btn c1" data-committee="un" type="button" aria-controls="committeePanel">
+                    <span class="emblem-frame"><img src="l6.png" alt="United Nations logo"></span>
+                    <span class="committee-label">LA COSA NOSTRA</span>
+                </button>
+
+                <button class="committee-btn c2" data-committee="nato" type="button" aria-controls="committeePanel">
+                    <span class="emblem-frame"><img src="l2.png" alt="NATO logo"></span>
+                    <span class="committee-label">IPL AUCTION</span>
+                </button>
+
+                <button class="committee-btn c3" data-committee="wto" type="button" aria-controls="committeePanel">
+                    <span class="emblem-frame"><img src="l7.png" alt="World Trade Organization logo"></span>
+                    <span class="committee-label">UNSC</span>
+                </button>
+
+                <button class="committee-btn c4" data-committee="eco" type="button" aria-controls="committeePanel">
+                    <span class="emblem-frame"><img src="l5.png" alt="Economic committee logo"></span>
+                    <span class="committee-label">INTERNATIONAL PRESS CORPS</span>
+                </button>
+
+                <button class="committee-btn c5" data-committee="au" type="button" aria-controls="committeePanel">
+                    <span class="emblem-frame"><img src="l1.png" alt="African Union logo"></span>
+                    <span class="committee-label">MIKHAIL GORBACHEV'S CABINET</span>
+                </button>
+
+                <button class="committee-btn c6" data-committee="uss" type="button" aria-controls="committeePanel">
+                    <span class="emblem-frame"><img src="l3.png" alt="United States Senate logo"></span>
+                    <span class="committee-label">UNODC</span>
+                </button>
+
+                <button class="committee-btn c7" data-committee="icj" type="button" aria-controls="committeePanel">
+                    <span class="emblem-frame"><img src="l4.png" alt="International Court of Justice logo"></span>
+                    <span class="committee-label">LOK SABHA</span>
+                </button>
+            </div>
+        </div>
+
+        <aside class="side-panel" id="committeePanel" aria-live="polite" aria-hidden="true">
+            <div class="mobile-panel-handle" aria-hidden="true"></div>
+            <div class="panel-head">
+                <div>
+                    <div class="panel-kicker">Committee Overview</div>
+                    <h2 class="panel-title" id="panelTitle">Select a committee</h2>
+                </div>
+                <button class="panel-close" id="panelClose" type="button" aria-label="Close panel">✕</button>
+            </div>
+
+            <div class="panel-divider"></div>
+
+            <p class="panel-overview" id="panelOverview">
+                Tap any emblem to reveal a concise committee brief, its thematic focus, and its document set.
+            </p>
+
+            <div class="panel-grid">
+                <article class="panel-card">
+                    <small>Agenda</small>
+                    <strong id="panelMandate">Awaiting selection</strong>
+                </article>
+
+                <article class="panel-card">
+                    <small>Executive Board</small>
+                    <ul id="panelTracks">
+                        <li>Choose a committee to populate this section.</li>
+                    </ul>
+                </article>
+            </div>
+
+            <div class="panel-docs">
+                <a class="panel-doc" href="#" download id="doc1">
+                    <span>
+                        <span class="doc-title">Study Guide</span>
+                        <span class="doc-sub">Primary committee brief</span>
+                    </span>
+                    <span aria-hidden="true">⬇</span>
+                </a>
+                <a class="panel-doc" href="#" download id="doc2">
+                    <span>
+                        <span class="doc-title">Background Guide</span>
+                        <span class="doc-sub">Context and framing notes</span>
+                    </span>
+                    <span aria-hidden="true">⬇</span>
+                </a>
+                <a class="panel-doc" href="#" download id="doc3">
+                    <span>
+                        <span class="doc-title">Rules / ROP</span>
+                        <span class="doc-sub">Procedural reference</span>
+                    </span>
+                    <span aria-hidden="true">⬇</span>
+                </a>
+            </div>
+        </aside>
+    </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script>
+    particlesJS('particles-js', {
+        particles: {
+            number: {
+                value: 250,
+                density: {
+                    enable: true,
+                    value_area: 900
+                }
+            },
+            color: {
+                value: '#d4af37'
+            },
+            shape: {
+                type: 'circle'
+            },
+            opacity: {
+                value: 0.4,
+                random: true
+            },
+            size: {
+                value: 4,
+                random: true
+            },
+            line_linked: {
+                enable: true,
+                distance: 150,
+                color: '#d4af37',
+                opacity: 0.12,
+                width: 1
+            },
+            move: {
+                enable: true,
+                speed: 1.2,
+                direction: 'none',
+                random: false,
+                straight: false,
+                out_mode: 'out',
+                bounce: false
+            }
+        },
+        interactivity: {
+            detect_on: 'canvas',
+            events: {
+                onhover: {
+                    enable: true,
+                    mode: 'repulse'
+                },
+                onclick: {
+                    enable: true,
+                    mode: 'push'
+                },
+                resize: true
+            },
+            modes: {
+                repulse: {
+                    distance: 120,
+                    duration: 0.4
+                },
+                push: {
+                    particles_nb: 3
+                }
+            }
+        },
+        retina_detect: false
+    });
+
+    const committeeData = {
+        un: {
+            title: 'La Cosa Nostra',
+            overview: 'A broad multilateral committee focused on international cooperation, crisis response, and diplomatic consensus.',
+            mandate: 'Maintenance of Stability and Effective organisation within the Mafia',
+            tracks: [
+                'Co-Chairperson: Ninaad Ghoshal',
+                'Co-Chairperson: Iqra Sarfaraz',
+            ],
+        },
+        nato: {
+            title: 'IPL Auction',
+            mandate: 'Bid for players to form the best possible team',
+            tracks: [
+                'Co-Auctioneer: Aalokik Dingwani',
+                'Co-Auctioneer: Jigar Gaud',
+            ],
+        },
+        wto: {
+            title: 'United Nations Security Council',
+            overview: 'A trade and policy committee built around negotiations, market access, tariffs, and global economic friction.',
+            mandate: 'Future of the International Maritime security regime ( detailed paperwork to be given later )',
+            tracks: [
+                'President: Abhinav Das',
+                'USG Political Affairs: Anitej Mukhopadhyay',
+                'Director of SCAD: Sohom Dutta'
+            ],
+        },
+        eco: {
+            title: 'International Press Corps',
+            overview: 'A policy-heavy forum examining fiscal stability, development, sanctions, and economic statecraft.',
+            mandate: 'Covering the Conference, Second Agenda for Journalism to be Given Later',
+            tracks: [
+                'Head of Journalis: Sweta Sahoo',
+                'Head of Photography: Arindam Mukherjee',
+                'Editor-in-Chief: Suhaan Mitra'
+            ],
+        },
+        au: {
+            title: "Mikhail Gorbachev's Cabinet",
+            overview: 'A regional committee focused on continental integration, security, governance, and development pathways.',
+            mandate: 'Addressing the immediate political , administrative and international crisis , arising from the Chernobyl Nuclear Disaster (1986)',
+            tracks: [
+                'Chairperson: Farriz Parwez',
+                'Vice-Chairperson: Siddhant Rawat',
+                'Director: Biyas Dutta'
+            ],
+        },
+        uss: {
+            title: 'United Nations Office on Drugs and Crime',
+            overview: 'A domestic legislative setting designed for partisan maneuvering, procedural tactics, and policy brinkmanship.',
+            mandate: 'Combating the narco- terrorist nexus by securing global supply  chains against infiltration and Disrupting trade based money laundering (TBML) Framework',
+            tracks: [
+                'Chairperson: Sankalp Chauhan',
+                'Vice Chairperson: Rohnit Pandey',
+                'Director: Sudakshina Ghosh; Rapporteur: Adrija Adhikari'
+
+            ],
+        },
+        icj: {
+            title: 'Lok Sabha',
+            overview: 'A judicial committee centered on legal arguments, jurisdictional interpretation, and resolution of international disputes.',
+            mandate: 'Deliberation on state policy with regards to the rights of the LGBTQIA+ community, and non exhaustive emphasis on recognition, marital and adoption rights.',
+            tracks: [
+                'Speaker: Shivans Bhura',
+                'Co-Deputy Speaker: Jashojeet Banerjee',
+                'Co-Deputy Speaker: Krish Prahaladka'
+            ],
+        }
+    };
+
+    const panel = document.getElementById('committeePanel');
+    const panelClose = document.getElementById('panelClose');
+    const buttons = document.querySelectorAll('.committee-btn');
+    const titleEl = document.getElementById('panelTitle');
+    const overviewEl = document.getElementById('panelOverview');
+    const mandateEl = document.getElementById('panelMandate');
+    const tracksEl = document.getElementById('panelTracks');
+    const doc1 = document.getElementById('doc1');
+    const doc2 = document.getElementById('doc2');
+    const doc3 = document.getElementById('doc3');
+
+    function openPanel(){
+        panel.classList.add('open');
+        panel.setAttribute('aria-hidden', 'false');
+    }
+
+    function closePanel(){
+        panel.classList.remove('open');
+        panel.setAttribute('aria-hidden', 'true');
+    }
+
+    function populateCommittee(key){
+        const data = committeeData[key];
+        if(!data) return;
+
+        titleEl.textContent = data.title;
+        overviewEl.textContent = data.overview;
+        mandateEl.textContent = data.mandate;
+        tracksEl.innerHTML = data.tracks.map(item => `<li>${item}</li>`).join('');
+
+        doc1.querySelector('.doc-title').textContent = `Study Guide - ${data.title}`;
+        doc2.querySelector('.doc-title').textContent = `Background - ${data.title}`;
+        doc3.querySelector('.doc-title').textContent = `Rules - ${data.title}`;
+
+        openPanel();
+    }
+
+    buttons.forEach(button => {
+        button.addEventListener('click', () => populateCommittee(button.dataset.committee));
+    });
+
+    panelClose.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        closePanel();
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closePanel();
+    });
+
+    const navToggle = document.getElementById('navToggle');
+    const navList = document.getElementById('navList');
+    if(navToggle && navList){
+        navToggle.addEventListener('click', () => navList.classList.toggle('open'));
+    }
+
+    closePanel();
+</script>
+
+</body>
+</html>

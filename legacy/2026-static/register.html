@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Register - SMUN</title>
+    <link rel="icon" type="image/png" href="fav.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        #particles-js {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+<div id="particles-js" aria-hidden="true"></div>
+<nav class="nav" role="navigation" aria-label="Main navigation">
+    <div class="nav-inner">
+        <a class="nav-brand" href="index.html">SMUN</a>
+
+        <button class="nav-toggle" id="navToggle" aria-controls="navList" aria-expanded="false" aria-label="Open menu">
+        <span class="hamburger">
+          <span class="bar bar1"></span>
+          <span class="bar bar2"></span>
+          <span class="bar bar3"></span>
+        </span>
+        </button>
+
+        <ul id="navList" class="nav-list" role="menubar" aria-label="Primary">
+            <li role="none"><a role="menuitem" class="nav-link" href="index.html">Home</a></li>
+            <li role="none"><a role="menuitem" class="nav-link active" href="register.html">Register</a></li>
+            <li role="none"><a role="menuitem" class="nav-link" href="committees.html">Committees</a></li>
+            <li role="none"><a role="menuitem" class="nav-link" href="secretariat.html">Secretariat</a></li>
+            <li role="none"><a role="menuitem" class="nav-link" href="utility.html">Utility</a></li>
+            <li role="none"><a role="menuitem" class="nav-link" href="contact.html">Contact Us</a></li>
+        </ul>
+    </div>
+</nav>
+
+<main id="home">
+    <section class="hero" id="register">
+        <p class="eyebrow">Registration</p>
+        <h1>Register for SMUN 2026</h1>
+        <p>Round 1 Registrations Are Now Closed! Stay Tuned For Round 2!</p>
+        <div style="margin-top: 28px; border-radius: 16px; overflow: hidden; border: 1px solid rgba(255,255,255,0.08);">
+            <iframe
+                    src=""
+                    width="100%"
+                    height="800"
+                    frameborder="0"
+                    marginheight="0"
+                    marginwidth="0"
+                    style="background: rgba(255,255,255,0.02);"
+            >Loading…</iframe>
+        </div>
+    </section>
+</main>
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script>
+    particlesJS('particles-js', {
+        particles: {
+            number: {
+                value: 250,
+                density: {
+                    enable: true,
+                    value_area: 900
+                }
+            },
+            color: {
+                value: '#d4af37'
+            },
+            shape: {
+                type: 'circle'
+            },
+            opacity: {
+                value: 0.4,
+                random: true
+            },
+            size: {
+                value: 4,
+                random: true
+            },
+            line_linked: {
+                enable: true,
+                distance: 150,
+                color: '#d4af37',
+                opacity: 0.12,
+                width: 1
+            },
+            move: {
+                enable: true,
+                speed: 1.2,
+                direction: 'none',
+                random: false,
+                straight: false,
+                out_mode: 'out',
+                bounce: false
+            }
+        },
+        interactivity: {
+            detect_on: 'canvas',
+            events: {
+                onhover: {
+                    enable: true,
+                    mode: 'repulse'
+                },
+                onclick: {
+                    enable: true,
+                    mode: 'push'
+                },
+                resize: true
+            },
+            modes: {
+                repulse: {
+                    distance: 120,
+                    duration: 0.4
+                },
+                push: {
+                    particles_nb: 3
+                }
+            }
+        },
+        retina_detect: false
+    });
+</script>
+<script>
+    const navToggle = document.getElementById('navToggle');
+    const navList = document.getElementById('navList');
+
+    if (navToggle && navList) {
+      navToggle.addEventListener('click', () => {
+        const isOpen = navToggle.getAttribute('aria-expanded') === 'true';
+        navToggle.setAttribute('aria-expanded', String(!isOpen));
+        navList.classList.toggle('open');
+      });
+    }
+</script>
+<script type="module">
+    import('./cursor-zigzag.js').then(({ createCursorZigzag }) => createCursorZigzag({ zIndex: 9999 }));
+</script>
+</body>
+</html>
