@@ -419,7 +419,7 @@ export default function App(){
  const [route,setRoute]=useState(getRoute),{mobile,reduced}=useViewport();useParallax(route);
  useEffect(()=>{const onHash=()=>setRoute(getRoute());addEventListener("hashchange",onHash);if(!location.hash)location.hash="#/";return()=>removeEventListener("hashchange",onHash);},[]);
  useEffect(()=>{
-  const match=route.match(/^committees\\/(.+)$/);
+  const match=route.match(/^committees\/(.+)$/);
   const committee=match?committees.find(item=>item.id===match[1]):null;
   const pages={
    "": ["Sangam Model United Nations 2027","A student-led forum for debate, diplomacy and collective problem-solving. Explore the committees, meet the Secretariat and find official conference updates."],
