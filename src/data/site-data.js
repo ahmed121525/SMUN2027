@@ -121,7 +121,7 @@ const SANGAM_DATA = {
       "post": "Secretary General",
       "division": "Council of Eminents",
       "image": "images/people/samrat.jpeg",
-      "bio": "A PCMB student with a strong interest in Model United Nations and global affairs, Ashmit combines scientific rigour with practical leadership. He values precision, discipline and clear decision-making, particularly when coordinating people and work across a busy conference.",
+      "bio": "Samrat brings experience as a delegate and debater to his role as Secretary General. He enjoys developing inventive crisis scenarios and clear committee communications. His interests extend to cricket, swimming and cooking, and he approaches conference leadership with curiosity, candour and high expectations.",
       "order": 1
     },
     {
@@ -148,7 +148,7 @@ const SANGAM_DATA = {
       "post": "Deputy Secretary General",
       "division": "Council of Eminents",
       "image": "images/people/assmit.jpeg",
-      "bio": "A Class 12 PCMB student yet a diplomat by instinct, Ashmit Seal balances scientific rigour with a strong passion for Model United Nations and global affairs. A natural multitasker with sharp attention to detail, he thrives where chaos meets control. As Deputy Secretary-General of SMUN 26, he leads with precision, discipline, and decisive clarity.",
+      "bio": "A PCMB student with a strong interest in Model United Nations and global affairs, Ashmit combines scientific rigour with practical leadership. He values precision, discipline and clear decision-making, particularly when coordinating people and work across a busy conference.",
       "order": 4
     },
     {
