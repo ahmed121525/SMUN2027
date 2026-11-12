@@ -196,7 +196,7 @@ function Home(){
   </div>
  </div><div className="hero-side-label">SANGAM · CONFLUENCE OF PERSPECTIVES</div><div className="hero-footer"><span>INDEPENDENT STUDENT-LED CONFERENCE</span><span>SCROLL TO EXPLORE ↓</span></div></section>
   <section className="home-stage" data-parallax-section>
-   <div className="section home-committees"><div className="wrap"><div className="section-head"><div><p className="eyebrow ember">01 / COMMITTEE ROOMS</p><h2 className="section-title">DIFFERENT MANDATES. ONE FORUM.</h2></div><MinimalButton href="#/committees">ALL COMMITTEES</MinimalButton></div><div className="committee-grid">{committees.map((c,i)=><a className="committee-tile" href={"#/committees/"+c.id} key={c.id}><div className="tile-top"><img src={asset(c.logo)} alt={c.name+" emblem"} loading="lazy"/><span className="tile-no">0{i+1}</span></div><div><h3>{c.name}</h3><p>{c.acronym} · COMMITTEE BRIEF</p></div><span className="tile-arrow">↗</span></a>)}</div></div></div>
+   <div className="section home-committees"><div className="wrap"><div className="section-head"><div><p className="eyebrow ember">01 / COMMITTEE ROOMS</p><h2 className="section-title">DIFFERENT MANDATES. ONE FORUM.</h2></div><MinimalButton href="#/committees">ALL COMMITTEES</MinimalButton></div><div className="committee-grid">{committees.map((c,i)=><a className="committee-tile" href={"#/committees/"+c.id} key={c.id}><div className="tile-top"><img src={asset(c.logo)} alt={c.name+" emblem"} loading="lazy"/><span className="tile-no">0{i+1}</span></div><div><h3>{c.name}</h3><p>{c.acronym} · {c.format||"COMMITTEE BRIEF"}</p></div><span className="tile-arrow">↗</span></a>)}</div></div></div>
    <ConferenceNotice/>
   </section>
  </>;
@@ -240,7 +240,7 @@ function Committees(){
     </div>
    </div>
   </section>
-  <section className="wrap committee-strip"><p className="eyebrow ember">ALL SIX ROOMS</p><div className="committee-strip-grid">{committees.map((item,index)=><a key={item.id} href={"#/committees/"+item.id}><span>0{index+1}</span><strong>{item.acronym}</strong><small>{item.name}</small></a>)}</div></section>
+  <section className="wrap committee-strip"><p className="eyebrow ember">ALL SIX ROOMS</p><div className="committee-strip-grid">{committees.map((item,index)=><a key={item.id} href={"#/committees/"+item.id}><span>0{index+1}</span><strong>{item.acronym}</strong><small>{item.format||"Committee"}</small><small>{item.name}</small></a>)}</div></section>
  </>;
 }
 
@@ -260,7 +260,7 @@ function ResourceLibrary({committee}){
 function CommitteeDetail({id}){
  const c=committees.find(item=>item.id===id);
  if(!c)return <section className="wrap not-found"><h1 className="display">COMMITTEE NOT FOUND.</h1><a className="text-link" href="#/committees">← BACK TO COMMITTEES</a></section>;
- return <div className="committee-detail"><div className="detail-banner"><div className="wrap"><MinimalButton href="#/committees">ALL COMMITTEES</MinimalButton></div></div><section className="detail-hero" data-parallax-section><div className="wrap detail-grid"><div className="detail-emblem" data-parallax="-.4"><img src={asset(c.logo)} alt={c.name+" emblem"}/></div><div data-reveal><p className="eyebrow ember">{c.acronym} · COMMITTEE PROFILE</p><h1>{c.name}</h1><p className="body-copy">{c.description}</p></div></div></section><section className="wrap detail-content"><div><p className="eyebrow ember">01 / MANDATE</p><h2>AGENDA & SCOPE</h2><p className="body-copy detail-description">{c.description}</p><div className="agenda-box"><p className="micro ember">AGENDA</p><p>{c.agenda}</p></div><div className="board-box"><p className="micro ember">EXECUTIVE BOARD</p>{(c.board||[]).map((m,i)=><div className="board-row" key={i}><span>0{i+1}</span><strong>{m}</strong></div>)}</div></div><ResourceLibrary committee={c}/></section></div>;
+ return <div className="committee-detail"><div className="detail-banner"><div className="wrap"><MinimalButton href="#/committees">ALL COMMITTEES</MinimalButton></div></div><section className="detail-hero" data-parallax-section><div className="wrap detail-grid"><div className="detail-emblem" data-parallax="-.4"><img src={asset(c.logo)} alt={c.name+" emblem"}/></div><div data-reveal><p className="eyebrow ember">{c.acronym} · COMMITTEE PROFILE</p><h1>{c.name}</h1><p className="body-copy">{c.description}</p><div className="committee-format-note"><span>COMMITTEE FORMAT</span><strong>{c.format||"Committee simulation"}</strong></div></div></div></section><section className="wrap detail-content"><div><p className="eyebrow ember">01 / MANDATE</p><h2>AGENDA & SCOPE</h2><p className="body-copy detail-description">{c.description}</p><div className="agenda-box"><p className="micro ember">AGENDA</p><p>{c.agenda}</p></div><div className="board-box"><p className="micro ember">EXECUTIVE BOARD</p>{(c.board||[]).map((m,i)=><div className="board-row" key={i}><span>0{i+1}</span><strong>{m}</strong></div>)}</div></div><ResourceLibrary committee={c}/></section></div>;
 }
 
 function Secretariat({mobile}){
@@ -416,6 +416,25 @@ function About(){
 export default function App(){
  const [route,setRoute]=useState(getRoute),{mobile,reduced}=useViewport();useParallax(route);
  useEffect(()=>{const onHash=()=>setRoute(getRoute());addEventListener("hashchange",onHash);if(!location.hash)location.hash="#/";return()=>removeEventListener("hashchange",onHash);},[]);
+ useEffect(()=>{
+  const match=route.match(/^committees\\/(.+)$/);
+  const committee=match?committees.find(item=>item.id===match[1]):null;
+  const pages={
+   "": ["Sangam Model United Nations 2027","A student-led forum for debate, diplomacy and collective problem-solving. Explore the committees, meet the Secretariat and find official conference updates."],
+   "committees": ["Committees | SMUN 2027","Explore the six SMUN 2027 committee rooms, their formats, mandates and Executive Boards."],
+   "secretariat": ["Secretariat | SMUN 2027","Meet the people responsible for organising Sangam Model United Nations 2027."],
+   "utilities": ["Conference Desk | SMUN 2027","Speech timer and speakers’ list tools for SMUN committee sessions."],
+   "about": ["About Sangam | SMUN 2027","Learn about Sangam Model United Nations, its purpose and Secretariat contacts."]
+  };
+  const meta=committee?[committee.name+" | SMUN 2027","Explore the "+committee.name+" committee at Sangam Model United Nations 2027."]:pages[route]||pages[""];
+  document.title=meta[0];
+  const description=document.querySelector('meta[name="description"]');
+  if(description)description.setAttribute("content",meta[1]);
+  const ogTitle=document.querySelector('meta[property="og:title"]');
+  if(ogTitle)ogTitle.setAttribute("content",meta[0]);
+  const ogDescription=document.querySelector('meta[property="og:description"]');
+  if(ogDescription)ogDescription.setAttribute("content",meta[1]);
+ },[route]);
  const detail=route.match(/^committees\/(.+)$/);
  const content=detail?<CommitteeDetail id={detail[1]}/>:route==="committees"?<Committees/>:route==="secretariat"?<Secretariat mobile={mobile}/>:route==="utilities"?<Desk/>:route==="about"?<About/>:<Home/>;
 
