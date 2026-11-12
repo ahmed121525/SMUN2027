@@ -2,7 +2,7 @@ const SANGAM_DATA = {
   "site": {
     "name": "Sangam Model United Nations",
     "shortName": "SMUN",
-    "edition": "Conference edition and dates to be announced",
+    "edition": "2027 edition · Conference details to be announced",
     "email": "secretariat@smun.in",
     "contacts": [
       {
@@ -27,6 +27,7 @@ const SANGAM_DATA = {
       "id": "ipl-auction",
       "name": "IPL Auction",
       "acronym": "IPL",
+      "format": "Auction simulation",
       "logo": "images/committees/l2.svg",
       "summary": "A live auction simulation where squad construction, valuation and bidding strategy decide the outcome.",
       "agenda": "Bid for players to form the best possible team.",
@@ -40,6 +41,7 @@ const SANGAM_DATA = {
       "id": "unsc",
       "name": "United Nations Security Council",
       "acronym": "UNSC",
+      "format": "Security Council",
       "logo": "images/committees/l7.png",
       "summary": "A multilateral forum on maritime security and the architecture of international stability.",
       "agenda": "Future of the International Maritime Security Regime (detailed paperwork to be provided by the conference).",
@@ -54,6 +56,7 @@ const SANGAM_DATA = {
       "id": "international-press-corps",
       "name": "International Press Corps",
       "acronym": "IPC",
+      "format": "Journalism and media",
       "logo": "images/committees/l5.svg",
       "summary": "The conference newsroom: reporting, documenting and scrutinising the proceedings.",
       "agenda": "Covering the Conference; the second agenda for journalism will be announced.",
@@ -68,6 +71,7 @@ const SANGAM_DATA = {
       "id": "mikhail-gorbachevs-cabinet",
       "name": "Mikhail Gorbachev’s Cabinet",
       "acronym": "MGC",
+      "format": "Historical crisis cabinet",
       "logo": "images/committees/l1.svg",
       "summary": "A historical crisis simulation set in the political and administrative aftermath of Chernobyl, 1986.",
       "agenda": "Addressing the immediate political, administrative and international crisis arising from the Chernobyl Nuclear Disaster (1986).",
@@ -82,6 +86,7 @@ const SANGAM_DATA = {
       "id": "unodc",
       "name": "United Nations Office on Drugs and Crime",
       "acronym": "UNODC",
+      "format": "Policy and multilateral negotiation",
       "logo": "images/committees/l3.png",
       "summary": "A policy challenge on illicit networks, global supply chains and trade-based money laundering.",
       "agenda": "Combating the narco-terrorist nexus by securing global supply chains against infiltration and disrupting the trade-based money laundering (TBML) framework.",
@@ -97,6 +102,7 @@ const SANGAM_DATA = {
       "id": "lok-sabha",
       "name": "Lok Sabha",
       "acronym": "LS",
+      "format": "Parliamentary simulation",
       "logo": "images/committees/l4.svg",
       "summary": "A parliamentary simulation focused on state policy, representation and legislative debate.",
       "agenda": "Deliberation on state policy with regard to the rights of the LGBTQIA+ community, with emphasis on recognition, marital and adoption rights.",
@@ -115,7 +121,7 @@ const SANGAM_DATA = {
       "post": "Secretary General",
       "division": "Council of Eminents",
       "image": "images/people/samrat.jpeg",
-      "bio": "A delegate, debater, and self-claimed orator, he’s either drafting geopolitically impossible yet oddly creative communiqués or scribbling smut you shouldn’t read. Often found in kitchens—hunting food or cooking it—his culinary flair fuels one belief: he will be a great man ((for her, name withheld). An ex-cricketer for Eastern Railways and state swimming champion, his fall came from two things: rising pressure on the ground and his greatest love—politics. With blunt questions and high expectations, your best bet is to run if you find him in committee, Today he's on a hattrick - serving as The Secretary General for SMUN 2026, yet again.",
+      "bio": "A PCMB student with a strong interest in Model United Nations and global affairs, Ashmit combines scientific rigour with practical leadership. He values precision, discipline and clear decision-making, particularly when coordinating people and work across a busy conference.",
       "order": 1
     },
     {
@@ -205,7 +211,7 @@ const SANGAM_DATA = {
       "post": "USG Finance & Outreach",
       "division": "Council of Regents",
       "image": "images/people/abhirup-chatterjee.svg",
-      "bio": "Abhirup Chatterjee, Under Secretary-General for Finance and Outreach at SMUN 2026, leads strategic partnerships with clarity and discipline. A national-level shooter, he embodies precision and composure, combining analytical thinking with strong \"communication\" to deliver impactful, results-driven outcomes.",
+      "bio": "Abhirup works across finance and outreach, bringing precision and composure to planning and partnerships. A national-level shooter, he values preparation, focus and disciplined execution, and applies those qualities to the operational work of the conference.",
       "order": 11
     },
     {
@@ -277,7 +283,7 @@ const SANGAM_DATA = {
       "post": "Vice Chairperson",
       "division": "Executive Board",
       "image": "images/people/iqra sarfaraz.jpg",
-      "bio": "Iqra Sarfaraz is a student at GEMS Our Own English High School, Dubai, with an interest in politics and economics. She began her MUN and debate journey in 2023 and has paritioated in around 50 MUNs in the Dubai and the international online mun circuit, winning every single one she delegated in, from first to latest. She is especially interested in crisis committees, and extremely excited to chair this committee and connect with all the delegates.",
+      "bio": "Iqra is a student at GEMS Our Own English High School in Dubai with a keen interest in politics and economics. Since beginning her MUN and debate journey in 2023, she has participated in conferences in Dubai and the international online circuit, with particular enthusiasm for crisis committees. She looks forward to bringing an analytical and engaged approach to the room.",
       "order": 19
     },
     {
@@ -295,7 +301,7 @@ const SANGAM_DATA = {
       "post": "Head of Photography",
       "division": "Executive Board",
       "image": "images/people/arindam mukherjee.jpg",
-      "bio": "At every event you'll find a random photographer in a peculiar position with a camera in their hand, that's Arindam Mukherjee. If ADHD was a person, it would be him. From Indian Committees to the Exposure triangle, he has been part of it all. A generous guy and a welcoming soul who never thinks twice before helping others. One with an outspoken mind and the extrovertedness which peaks above all. Outside of conference rooms, you'll find him busy in the world of poetry, films, doom scrolling and mostly on the field of a random sport. Completed High School from Julien Day School, Ganganagar. Arindam is a diehard Culer who loves Joga Bonita and grew up idolising AB De Villiers. A comic book nerd who might end up dissecting you thoroughly if you put up a wrong fact about any comic book character.",
+      "bio": "Arindam is a photographer with an interest in journalism, sport, poetry and film. He enjoys capturing the energy of committee rooms and the moments around them, and brings an observant, approachable presence to the conference's media team.",
       "order": 21
     },
     {
@@ -304,7 +310,7 @@ const SANGAM_DATA = {
       "post": "Editor-in-Chief",
       "division": "Executive Board",
       "image": "images/people/Suhaan mitra.jpg",
-      "bio": "Meet Suhaan Mitra, the personified form of OCD -and lets not even get into deadlines cause he would rather be dead than miss them. A journalist who knows what the people deserve to know and asks the question that needs to be asked. He has won everywhere he went as a journalist and he brings his experience to the table and shall make sure everyone is imparted with them, (forcefully against your will if it is required). A comic book nerd, a foodie and a lot more things who loves to cracks jokes in the most serious situations.",
+      "bio": "Suhaan is a journalist who values accuracy, timely reporting and asking the questions that matter. His experience in student journalism informs his work as Editor-in-Chief, where he aims to bring clarity and purpose to the conference's coverage. Outside the newsroom, he enjoys comics, food and humour.",
       "order": 22
     },
     {
@@ -367,7 +373,7 @@ const SANGAM_DATA = {
       "post": "Speaker",
       "division": "Executive Board",
       "image": "images/people/shivans bhura.jpg",
-      "bio": "Since his early school days, Shivans Bhura has been passionate about oration, theatre, and active participation. Now pursuing a BA in Journalism and Mass Communication at Bhawanipur Education Society College, he continues to channel his creativity and dedication into every endeavor. Having participated in numerous conferences, he has explored diverse formats but finds his true passion in the dynamic world of Indian Committees. Admired for his affable nature and ability to inspire, Shivans has earned a reputation as a fountain of joy and positivity. With a strong foundation in public speaking, theatre, and diplomacy, he now steps in as the Speaker of Lok Sabha at SMUN 2026, ready to lead with enthusiasm and ensure an engaging and memorable experience for all delegates.",
+      "bio": "Shivans has long been interested in oration, theatre and public participation. His studies in journalism and mass communication complement his enthusiasm for parliamentary debate, where he values clear argument, lively discussion and an inclusive atmosphere.",
       "order": 29
     },
     {
@@ -376,7 +382,7 @@ const SANGAM_DATA = {
       "post": "Co-Deputy Speaker",
       "division": "Executive Board",
       "image": "images/people/Jashojeet Banerjee.jpg",
-      "bio": "Jashojeet Banerjee is equal parts wit, sarcasm, and drama. The kind of person who'll dodge 19 of your calls only to reply the next day with a deadpan \"bol,\" he thrives on sharp comebacks and below-the-belt roasts that somehow leave you laughing instead of crying. Not one for paperwork, Jashojeet lets his words do the heavy lifting-blunt, bold, and always entertaining. Whether he's breaking down politics with his unique takes or flooding stories with his trademark sarcasm, he's impossible to ignore. And that's exactly why SMUN 2026 needed him as Lok Sabha's Deputy Speaker-because some chaos deserves a mic.",
+      "bio": "Jashojeet brings wit, energy and a flair for performance to parliamentary debate. As Co-Deputy Speaker, he aims to help maintain a lively but orderly chamber, encouraging delegates to make their arguments with clarity and conviction.",
       "order": 30
     },
     {
