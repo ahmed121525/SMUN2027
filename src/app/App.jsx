@@ -108,7 +108,7 @@ function Header({route}){
  </a>);
  const mobileLayer=mobileMenu?createPortal(<>
   {open&&<button className="mobile-menu-scrim" type="button" aria-label="Close navigation" onClick={close}/>}
-  <nav id="mobile-site-navigation" className={"mobile-menu-panel"+(open?" is-open":"")} aria-label="Mobile navigation" aria-hidden={!open}>
+  <nav id="mobile-site-navigation" className={"mobile-menu-panel"+(open?" is-open":"")} aria-label="Mobile navigation" aria-hidden={!open} inert={!open}>
    <div className="mobile-menu-heading">
     <div><span className="micro ember">SANGAM / 2027</span><strong>Navigate</strong></div>
     <button className="mobile-menu-close" type="button" onClick={close} aria-label="Close menu"><span>CLOSE</span><b>×</b></button>
@@ -166,24 +166,19 @@ function PageHead({eyebrow,title,copy,index}){
  </section>;
 }
 
-function ConferenceCountdown(){
- const target=Date.parse("2027-11-21T00:00:00+05:30");
- const [remaining,setRemaining]=useState(()=>Math.max(0,target-Date.now()));
- useEffect(()=>{
-  const update=()=>setRemaining(Math.max(0,target-Date.now()));
-  update();
-  const timer=window.setInterval(update,1000);
-  return()=>window.clearInterval(timer);
- },[]);
- const days=Math.floor(remaining/86400000);
- const hours=Math.floor((remaining%86400000)/3600000);
- const minutes=Math.floor((remaining%3600000)/60000);
- const seconds=Math.floor((remaining%60000)/1000);
- const parts=[["DAYS",String(days).padStart(3,"0")],["HOURS",String(hours).padStart(2,"0")],["MINUTES",String(minutes).padStart(2,"0")],["SECONDS",String(seconds).padStart(2,"0")]];
- return <section className="countdown-band" data-parallax-section aria-label="Conference countdown">
-  <div className="countdown-center">
-   <div className="countdown-digits" role="timer" aria-label={`${days} days, ${hours} hours, ${minutes} minutes and ${seconds} seconds`}>
-    {parts.map(([label,value])=><div className="countdown-unit" key={label}><strong>{value}</strong><span>{label}</span></div>)}
+function ConferenceNotice(){
+ return <section className="conference-notice-band" aria-labelledby="conference-notice-title">
+  <div className="wrap conference-notice-grid">
+   <div className="conference-notice-copy">
+    <p className="eyebrow ember">SMUN / 2027 EDITION</p>
+    <h2 id="conference-notice-title">CONFERENCE DETAILS<br/><span>WILL BE ANNOUNCED HERE.</span></h2>
+    <p>Confirmed dates, venue, registration particulars and the conference schedule will be published here by the Secretariat. Please rely on official conference updates rather than provisional information.</p>
+   </div>
+   <div className="conference-notice-facts" aria-label="Conference information status">
+    <div><span>DATES</span><strong>TO BE ANNOUNCED</strong></div>
+    <div><span>VENUE</span><strong>TO BE ANNOUNCED</strong></div>
+    <div><span>REGISTRATION</span><strong>DETAILS PENDING</strong></div>
+    <a href="#/about">CONTACT THE SECRETARIAT <span aria-hidden="true">↗</span></a>
    </div>
   </div>
  </section>;
@@ -202,7 +197,7 @@ function Home(){
  </div><div className="hero-side-label">SANGAM · CONFLUENCE OF PERSPECTIVES</div><div className="hero-footer"><span>INDEPENDENT STUDENT-LED CONFERENCE</span><span>SCROLL TO EXPLORE ↓</span></div></section>
   <section className="home-stage" data-parallax-section>
    <div className="section home-committees"><div className="wrap"><div className="section-head"><div><p className="eyebrow ember">01 / COMMITTEE ROOMS</p><h2 className="section-title">DIFFERENT MANDATES. ONE FORUM.</h2></div><MinimalButton href="#/committees">ALL COMMITTEES</MinimalButton></div><div className="committee-grid">{committees.map((c,i)=><a className="committee-tile" href={"#/committees/"+c.id} key={c.id}><div className="tile-top"><img src={asset(c.logo)} alt={c.name+" emblem"} loading="lazy"/><span className="tile-no">0{i+1}</span></div><div><h3>{c.name}</h3><p>{c.acronym} · COMMITTEE BRIEF</p></div><span className="tile-arrow">↗</span></a>)}</div></div></div>
-   <ConferenceCountdown/>
+   <ConferenceNotice/>
   </section>
  </>;
 }
@@ -256,11 +251,11 @@ async function putFile(row){const db=await openDB();return new Promise((resolve,
 async function deleteFile(id){const db=await openDB();return new Promise((resolve,reject)=>{const tx=db.transaction("files","readwrite");tx.objectStore("files").delete(id);tx.oncomplete=()=>{db.close();resolve();};tx.onerror=()=>{db.close();reject(tx.error);};});}
 function ResourceLibrary({committee}){
  const [files,setFiles]=useState([]),[title,setTitle]=useState(""),[category,setCategory]=useState("Study Guide"),[status,setStatus]=useState("Loading resources…"),[busy,setBusy]=useState(false);
- const refresh=async()=>{try{const rows=await getFiles(committee.id);setFiles(rows.sort((a,b)=>b.addedAt-a.addedAt));setStatus(rows.length?"":"No resources have been added in this browser yet.");}catch(e){setStatus(e.message||"Resource storage is unavailable.");}};
+ const refresh=async()=>{try{const rows=await getFiles(committee.id);setFiles(rows.sort((a,b)=>b.addedAt-a.addedAt));setStatus(rows.length?"":"No personal files have been saved in this browser yet.");}catch(e){setStatus(e.message||"Resource storage is unavailable.");}};
  useEffect(()=>{refresh();},[committee.id]);
- const add=async e=>{e.preventDefault();const form=e.currentTarget,file=form.elements.resourceFile.files?.[0];if(!file){setStatus("Choose a document first.");return;}const ext=file.name.split(".").pop().toLowerCase();if(!["pdf","doc","docx","ppt","pptx","txt"].includes(ext)){setStatus("Use PDF, Word, PowerPoint or TXT.");return;}if(file.size>20*1024*1024){setStatus("Files must be smaller than 20 MB.");return;}setBusy(true);try{await putFile({id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),committeeId:committee.id,title:title.trim()||file.name,category,fileName:file.name,size:file.size,addedAt:Date.now(),blob:file});setTitle("");form.reset();await refresh();setStatus("Resource saved in this browser.");}catch(err){setStatus(err.message||"Could not save this file.");}finally{setBusy(false);}};
+ const add=async e=>{e.preventDefault();const form=e.currentTarget,file=form.elements.resourceFile.files?.[0];if(!file){setStatus("Choose a document first.");return;}const ext=file.name.split(".").pop().toLowerCase();if(!["pdf","doc","docx","ppt","pptx","txt"].includes(ext)){setStatus("Use PDF, Word, PowerPoint or TXT.");return;}if(file.size>20*1024*1024){setStatus("Files must be smaller than 20 MB.");return;}setBusy(true);try{await putFile({id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),committeeId:committee.id,title:title.trim()||file.name,category,fileName:file.name,size:file.size,addedAt:Date.now(),blob:file});setTitle("");form.reset();await refresh();setStatus("Saved in this browser only; this file has not been shared.");}catch(err){setStatus(err.message||"Could not save this file.");}finally{setBusy(false);}};
  const download=row=>{const url=URL.createObjectURL(row.blob),a=document.createElement("a");a.href=url;a.download=row.fileName;a.click();setTimeout(()=>URL.revokeObjectURL(url),1200);};
- return <div className="resources"><p className="eyebrow ember">03 / DOCUMENT LIBRARY</p><h2>RESOURCES & UPDATES</h2><p className="resource-warning">Files added here are stored only in this browser on this device. They are not published to other delegates.</p><div className="resource-list">{files.map(f=><div className="resource-row" key={f.id}><div><span className="micro ember">{f.category} · {(f.size/1024).toFixed(0)} KB</span><strong>{f.title}</strong><small>{f.fileName}</small></div><div className="resource-actions"><button className="text-button" onClick={()=>download(f)}>DOWNLOAD ↗</button><button className="text-button danger" onClick={async()=>{await deleteFile(f.id);refresh();}}>REMOVE</button></div></div>)}{!files.length&&<div className="resource-empty">{status}</div>}</div><form className="upload-form" onSubmit={add}><h3>ADD A RESOURCE</h3><div className="upload-grid"><div className="field"><label htmlFor="resourceTitle">DOCUMENT TITLE</label><input id="resourceTitle" value={title} onChange={e=>setTitle(e.target.value)} maxLength="90" placeholder="e.g. Study Guide — Agenda I"/></div><div className="field"><label htmlFor="resourceCategory">CATEGORY</label><select id="resourceCategory" value={category} onChange={e=>setCategory(e.target.value)}><option>Study Guide</option><option>Committee Update</option><option>Notice</option><option>Background Paper</option><option>Other</option></select></div><div className="field"><label htmlFor="resourceFile">DOCUMENT (MAX 20 MB)</label><input id="resourceFile" name="resourceFile" type="file" accept=".pdf,.doc,.docx,.ppt,.pptx,.txt" required/></div></div><button className="pill filled" type="submit" disabled={busy}>{busy?"SAVING…":"SAVE RESOURCE ↗"}</button><p className="resource-status" aria-live="polite">{status}</p></form></div>;
+ return <div className="resources"><p className="eyebrow ember">03 / PERSONAL RESOURCE SHELF</p><h2>PERSONAL FILES</h2><p className="resource-warning">This is a private, browser-local shelf. Files saved here remain on this device and are not uploaded to the conference, shared with the Secretariat, or visible to other delegates. Official conference documents will be published separately when released.</p><div className="resource-list">{files.map(f=><div className="resource-row" key={f.id}><div><span className="micro ember">{f.category} · {(f.size/1024).toFixed(0)} KB</span><strong>{f.title}</strong><small>{f.fileName}</small></div><div className="resource-actions"><button className="text-button" onClick={()=>download(f)}>DOWNLOAD ↗</button><button className="text-button danger" onClick={async()=>{await deleteFile(f.id);refresh();}}>REMOVE</button></div></div>)}{!files.length&&<div className="resource-empty">{status}</div>}</div><form className="upload-form" onSubmit={add}><h3>SAVE A PERSONAL REFERENCE COPY</h3><div className="upload-grid"><div className="field"><label htmlFor="resourceTitle">DOCUMENT TITLE</label><input id="resourceTitle" value={title} onChange={e=>setTitle(e.target.value)} maxLength="90" placeholder="e.g. Study Guide — Agenda I"/></div><div className="field"><label htmlFor="resourceCategory">CATEGORY</label><select id="resourceCategory" value={category} onChange={e=>setCategory(e.target.value)}><option>Study Guide</option><option>Committee Update</option><option>Notice</option><option>Background Paper</option><option>Other</option></select></div><div className="field"><label htmlFor="resourceFile">DOCUMENT (MAX 20 MB)</label><input id="resourceFile" name="resourceFile" type="file" accept=".pdf,.doc,.docx,.ppt,.pptx,.txt" required/></div></div><button className="pill filled" type="submit" disabled={busy}>{busy?"SAVING…":"SAVE PERSONAL COPY ↗"}</button><p className="resource-status" aria-live="polite">{status}</p></form></div>;
 }
 function CommitteeDetail({id}){
  const c=committees.find(item=>item.id===id);
@@ -275,9 +270,11 @@ function Secretariat({mobile}){
  const items=people.map(p=>({image:asset(p.image),title:p.name}));
  const modalRef=useRef(null);
  const backdropRef=useRef(null);
+ const openerRef=useRef(null);
 
  const openProfile=(person,event)=>{
   const origin=event.currentTarget;
+  openerRef.current=origin;
   const flipState=Flip.getState(origin,{props:"backgroundColor,borderColor,borderRadius"});
   setHoveredId(null);
   setActive({person,flipState});
@@ -291,7 +288,9 @@ function Secretariat({mobile}){
    const destination=document.getElementById("profile-card-"+id);
    if(destination){
     Flip.from(flipState,{targets:destination,duration:0.62,ease:"power3.inOut",scale:true,fade:true,absolute:true,prune:true});
-   }
+    destination.focus();
+   }else openerRef.current?.focus();
+   openerRef.current=null;
   }));
  };
 
@@ -302,6 +301,7 @@ function Secretariat({mobile}){
   const backdrop=backdropRef.current;
   const modal=modalRef.current;
   const fade=gsap.fromTo(backdrop,{autoAlpha:0},{autoAlpha:1,duration:0.28,ease:"power1.out"});
+  const focusFrame=requestAnimationFrame(()=>modal.querySelector(".modal-close")?.focus());
   const flip=Flip.from(active.flipState,{
    targets:modal,
    duration:0.78,
@@ -317,10 +317,19 @@ function Secretariat({mobile}){
     );
    }
   });
-  const onKeyDown=event=>{if(event.key==="Escape")closeProfile();};
+  const onKeyDown=event=>{
+   if(event.key==="Escape"){closeProfile();return;}
+   if(event.key==="Tab"){
+    const focusable=[...modal.querySelectorAll('button:not([disabled]),a[href],input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])')].filter(el=>el.offsetParent!==null);
+    if(!focusable.length){event.preventDefault();return;}
+    const first=focusable[0],last=focusable[focusable.length-1];
+    if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}
+    else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}
+   }
+  };
   window.addEventListener("keydown",onKeyDown);
   return()=>{
-   fade.kill();flip.kill();
+   fade.kill();flip.kill();cancelAnimationFrame(focusFrame);
    window.removeEventListener("keydown",onKeyDown);
    document.body.style.overflow=previousOverflow;
   };
@@ -369,12 +378,12 @@ function Secretariat({mobile}){
    })}
   </section>
   {active&&<div ref={backdropRef} className="profile-modal-backdrop" onClick={closeProfile}>
-   <article ref={modalRef} className="profile-modal" data-flip-id={"profile-"+active.person.id} role="dialog" aria-modal="true" aria-label={active.person.name+" profile"} onClick={event=>event.stopPropagation()}>
+   <article ref={modalRef} className="profile-modal" data-flip-id={"profile-"+active.person.id} role="dialog" aria-modal="true" aria-labelledby="profile-dialog-title" onClick={event=>event.stopPropagation()}>
     <button className="modal-close" onClick={closeProfile} aria-label="Close profile">×</button>
     <div className="profile-modal-image"><img src={asset(active.person.image)} alt={active.person.name}/><span>{active.person.division}</span></div>
     <div className="profile-modal-copy">
      <p className="eyebrow ember">{active.person.division}</p>
-     <h2>{active.person.name}</h2>
+     <h2 id="profile-dialog-title">{active.person.name}</h2>
      <p className="profile-post">{active.person.post}</p>
      <div className="profile-bio"><p className="body-copy">{active.person.bio}</p></div>
      <button className="profile-modal-close" onClick={closeProfile}>RETURN TO THE SECRETARIAT <span>↗</span></button>
@@ -387,17 +396,19 @@ function Secretariat({mobile}){
 
 function Desk(){
  const [duration,setDuration]=useState(180),[remaining,setRemaining]=useState(180),[running,setRunning]=useState(false),[name,setName]=useState("");
- const [queue,setQueue]=useState(()=>{try{return JSON.parse(localStorage.getItem("smun-speaker-queue")||"[]");}catch{return [];}});
+ const [queue,setQueue]=useState(()=>{try{return JSON.parse(localStorage.getItem("smun-speaker-queue")||"[]");}catch{return [];}});const audioContextRef=useRef(null);
  useEffect(()=>{localStorage.setItem("smun-speaker-queue",JSON.stringify(queue));},[queue]);
- useEffect(()=>{if(!running)return;const timer=setInterval(()=>setRemaining(n=>{if(n<=1){setRunning(false);return 0;}return n-1;}),1000);return()=>clearInterval(timer);},[running]);
+ useEffect(()=>{if(!running)return;const timer=setInterval(()=>setRemaining(n=>{if(n<=1){setRunning(false);playTimerAlert();return 0;}return n-1;}),1000);return()=>clearInterval(timer);},[running]);
  const fmt=n=>String(Math.floor(n/60)).padStart(2,"0")+":"+String(n%60).padStart(2,"0");
+ const armTimerAudio=()=>{const AudioContextClass=window.AudioContext||window.webkitAudioContext;if(!AudioContextClass)return;try{if(!audioContextRef.current)audioContextRef.current=new AudioContextClass();if(audioContextRef.current.state==="suspended")audioContextRef.current.resume().catch(()=>{});}catch{}};
+ const playTimerAlert=()=>{const ctx=audioContextRef.current;if(!ctx||ctx.state!=="running")return;const start=ctx.currentTime;[0,.24,.48].forEach((offset,index)=>{const oscillator=ctx.createOscillator(),gain=ctx.createGain();oscillator.type="sine";oscillator.frequency.value=index===1?660:880;gain.gain.setValueAtTime(.0001,start+offset);gain.gain.exponentialRampToValueAtTime(.12,start+offset+.015);gain.gain.exponentialRampToValueAtTime(.0001,start+offset+.17);oscillator.connect(gain);gain.connect(ctx.destination);oscillator.start(start+offset);oscillator.stop(start+offset+.18);});};
  const preset=n=>{setRunning(false);setDuration(n);setRemaining(n);};
  const add=e=>{e.preventDefault();if(name.trim())setQueue(q=>[...q,{id:String(Date.now())+Math.random(),name:name.trim(),spoken:false}]);setName("");};
  const update=(id,patch)=>setQueue(q=>q.map(p=>p.id===id?{...p,...patch}:p));
  const move=(i,d)=>setQueue(q=>{const n=[...q],j=i+d;if(j<0||j>=n.length)return q;[n[i],n[j]]=[n[j],n[i]];return n;});
  const importList=async e=>{const f=e.target.files?.[0];if(!f)return;const names=(await f.text()).split(/\r?\n|,/).map(x=>x.trim().replace(/^"|"$/g,"")).filter(Boolean);setQueue(q=>[...q,...names.map((name,i)=>({id:String(Date.now())+i+Math.random(),name,spoken:false}))]);e.target.value="";};
  const exportList=()=>{const text=["Position,Delegate,Status",...queue.map((p,i)=>[i+1,'"'+p.name.replace(/"/g,'""')+'"',p.spoken?"Spoken":"Waiting"].join(","))].join("\n"),url=URL.createObjectURL(new Blob([text],{type:"text/csv"})),a=document.createElement("a");a.href=url;a.download="smun-speaker-queue.csv";a.click();URL.revokeObjectURL(url);};
- return <><PageHead eyebrow="CONFERENCE DESK" title={"THE TOOLS<br/><span class='soft'>OF DEBATE.</span>"} copy="A practical workspace for timing speeches and keeping a clear, orderly speakers’ list during committee sessions." index="LIVE TOOLS"/><section className="wrap desk-layout"><article className="desk-panel timer-panel"><p className="eyebrow ember">01 / SPEECH TIMER</p><div className="timer-display">{fmt(remaining)}</div><div className="timer-state">{running?"TIMER RUNNING":remaining===0?"TIME COMPLETE":"READY TO BEGIN"}</div><div className="timer-presets">{[60,180,300,420,600,900].map(n=><button key={n} className={duration===n?"is-selected":""} onClick={()=>preset(n)}>{n/60} MIN</button>)}</div><div className="timer-actions"><button className="pill filled" onClick={()=>remaining===0?setRemaining(duration):setRunning(!running)}>{running?"PAUSE":remaining===0?"RESTART":"START"}</button><button className="pill" onClick={()=>{setRunning(false);setRemaining(duration);}}>RESET</button></div><p className="timer-caption">The clock is local to this browser tab. Keep the page open during the session.</p></article><article className="desk-panel queue-panel"><div className="queue-head"><div><p className="eyebrow ember">02 / SPEAKERS’ LIST</p><h2>DELEGATE QUEUE</h2></div><span className="queue-count">{queue.filter(p=>!p.spoken).length} WAITING</span></div><form className="queue-add" onSubmit={add}><input aria-label="Delegate name" value={name} onChange={e=>setName(e.target.value)} placeholder="Enter delegate name" maxLength="80"/><button className="pill filled">ADD +</button></form><div className="queue-actions"><button className="text-button" onClick={()=>{const p=queue.find(x=>!x.spoken);if(p)update(p.id,{spoken:true});}} disabled={!queue.some(p=>!p.spoken)}>MARK NEXT AS SPOKEN</button><label className="text-button import-label">IMPORT TXT / CSV<input type="file" accept=".txt,.csv" onChange={importList}/></label><button className="text-button" onClick={exportList} disabled={!queue.length}>EXPORT CSV</button></div><div className="speaker-list">{queue.map((p,i)=><div className={"speaker-row"+(p.spoken?" is-spoken":"")} key={p.id}><span className="speaker-position">{String(i+1).padStart(2,"0")}</span><strong>{p.name}</strong><span className="speaker-status">{p.spoken?"SPOKEN":"WAITING"}</span><div className="speaker-controls"><button onClick={()=>move(i,-1)} disabled={!i} aria-label="Move up">↑</button><button onClick={()=>move(i,1)} disabled={i===queue.length-1} aria-label="Move down">↓</button><button onClick={()=>update(p.id,{spoken:!p.spoken})} aria-label="Toggle spoken">{p.spoken?"↶":"✓"}</button><button onClick={()=>setQueue(q=>q.filter(x=>x.id!==p.id))} aria-label="Remove delegate">×</button></div></div>)}{!queue.length&&<div className="resource-empty">The speakers’ list is empty. Add the first delegate above.</div>}</div><button className="text-button danger clear-queue" onClick={()=>setQueue([])} disabled={!queue.length}>CLEAR SPEAKERS’ LIST</button></article></section></>;
+ return <><PageHead eyebrow="CONFERENCE DESK" title={"THE TOOLS<br/><span class='soft'>OF DEBATE.</span>"} copy="A practical workspace for timing speeches and keeping a clear, orderly speakers’ list during committee sessions." index="LIVE TOOLS"/><section className="wrap desk-layout"><article className="desk-panel timer-panel"><p className="eyebrow ember">01 / SPEECH TIMER</p><div className="timer-display" role="timer" aria-label={`${fmt(remaining)} remaining`}>{fmt(remaining)}</div><div className="timer-state" role="status" aria-live="polite">{running?"TIMER RUNNING":remaining===0?"TIME COMPLETE":"READY TO BEGIN"}</div><div className="timer-presets">{[60,180,300,420,600,900].map(n=><button key={n} className={duration===n?"is-selected":""} onClick={()=>preset(n)}>{n/60} MIN</button>)}</div><div className="timer-actions"><button className="pill filled" onClick={()=>{if(running){setRunning(false);return;}armTimerAudio();if(remaining===0)setRemaining(duration);setRunning(true);}}>{running?"PAUSE":remaining===0?"RESTART":"START"}</button><button className="pill" onClick={()=>{setRunning(false);setRemaining(duration);}}>RESET</button></div><p className="timer-caption">The clock is local to this browser tab. Keep the page open during the session.</p></article><article className="desk-panel queue-panel"><div className="queue-head"><div><p className="eyebrow ember">02 / SPEAKERS’ LIST</p><h2>DELEGATE QUEUE</h2><p className="queue-storage-note">Saved only in this browser. This list is not shared with other chairs or devices.</p></div><span className="queue-count">{queue.filter(p=>!p.spoken).length} WAITING</span></div><form className="queue-add" onSubmit={add}><input aria-label="Delegate name" value={name} onChange={e=>setName(e.target.value)} placeholder="Enter delegate name" maxLength="80"/><button className="pill filled">ADD +</button></form><div className="queue-actions"><button className="text-button" onClick={()=>{const p=queue.find(x=>!x.spoken);if(p)update(p.id,{spoken:true});}} disabled={!queue.some(p=>!p.spoken)}>MARK NEXT AS SPOKEN</button><label className="text-button import-label">IMPORT TXT / CSV<input type="file" accept=".txt,.csv" onChange={importList}/></label><button className="text-button" onClick={exportList} disabled={!queue.length}>EXPORT CSV</button></div><div className="speaker-list">{queue.map((p,i)=><div className={"speaker-row"+(p.spoken?" is-spoken":"")} key={p.id}><span className="speaker-position">{String(i+1).padStart(2,"0")}</span><strong>{p.name}</strong><span className="speaker-status">{p.spoken?"SPOKEN":"WAITING"}</span><div className="speaker-controls"><button onClick={()=>move(i,-1)} disabled={!i} aria-label="Move up">↑</button><button onClick={()=>move(i,1)} disabled={i===queue.length-1} aria-label="Move down">↓</button><button onClick={()=>update(p.id,{spoken:!p.spoken})} aria-label="Toggle spoken">{p.spoken?"↶":"✓"}</button><button onClick={()=>setQueue(q=>q.filter(x=>x.id!==p.id))} aria-label="Remove delegate">×</button></div></div>)}{!queue.length&&<div className="resource-empty">The speakers’ list is empty. Add the first delegate above.</div>}</div><button className="text-button danger clear-queue" onClick={()=>setQueue([])} disabled={!queue.length}>CLEAR SPEAKERS’ LIST</button></article></section></>;
 }
 function About(){
  return <><PageHead eyebrow="ABOUT SANGAM" title={"A CONFLUENCE<br/><span class='soft'>OF PERSPECTIVES.</span>"} copy="Sangam Model United Nations is a student-led forum built around the serious work of understanding, contesting and negotiating ideas." index="THE CONFERENCE"/><section className="wrap about-layout"><div className="about-lead" data-parallax="-.3"><p className="eyebrow ember">OUR PURPOSE</p><h2 className="section-title">DIALOGUE IS NOT THE ABSENCE OF DISAGREEMENT. IT IS THE DISCIPLINE OF ENGAGING WITH IT.</h2></div><div className="about-copy"><p className="body-copy">Sangam creates a space where young people can examine public questions through research, debate, diplomacy and collaboration. Its committees offer distinct settings for deliberation, while the conference as a whole asks delegates to listen carefully, argue rigorously and remain open to persuasion.</p><div className="about-principles"><div><span>01</span><strong>INTELLECTUAL CURIOSITY</strong><p>Question assumptions and seek evidence before settling on a position.</p></div><div><span>02</span><strong>PRINCIPLED DISAGREEMENT</strong><p>Engage competing views without reducing debate to performance.</p></div><div><span>03</span><strong>COLLECTIVE PROBLEM-SOLVING</strong><p>Build proposals that recognise complexity and invite cooperation.</p></div></div></div></section><section className="section contact-section"><div className="wrap"><div className="section-head"><div><p className="eyebrow ember">CORRESPONDENCE</p><h2 className="section-title">THE SECRETARIAT IS WITHIN REACH.</h2></div><MinimalButton href={"mailto:"+(site.email||"secretariat@smun.in")}>WRITE TO THE SECRETARIAT</MinimalButton></div><div className="contact-grid">{(site.contacts||[]).map((c,i)=><article className="contact-card" key={c.role}><span>0{i+1}</span><p>{c.role}</p><h3>{c.name}</h3><a href={"tel:"+c.phone.replace(/\s/g,"")}>{c.phone}</a></article>)}</div></div></section><footer className="about-page-footer"><div className="about-page-footer-inner"><span className="about-page-copyright">© SMUN 2027 | All Rights Reserved</span><CreatorCredit/></div></footer></>;
@@ -408,5 +419,5 @@ export default function App(){
  const detail=route.match(/^committees\/(.+)$/);
  const content=detail?<CommitteeDetail id={detail[1]}/>:route==="committees"?<Committees/>:route==="secretariat"?<Secretariat mobile={mobile}/>:route==="utilities"?<Desk/>:route==="about"?<About/>:<Home/>;
 
- return <div className="app-shell"><RippleDistortion className="site-water" src={asset("assets/smun-ripple-field.svg")} brushSize={mobile?104:170} strength={mobile?0.11:0.17} swirl={0.82} rings={4} spread={5.2} fade={3.2} spacing={mobile?24:13} dispersion={0.035} glint={0.16} tint="#d92b45" highlightColor="#ffe4a0" tintAmount={0.14} grayscale={false} trigger="both" quality={mobile?"low":"medium"} enabled={!reduced}/><GradientASCII className="ambient-ascii" colors={["#3d0d1b","#87172c","#d92b45","#d7a64c","#ffe8aa"]} shape="eclipse" characters=" .:-=+*#" cellSize={mobile?13:18} density={mobile?0.58:0.68} glyphOpacity={0.82} gradientOpacity={0.74} glow={0.09} depthOfField={0.1} flicker={0.035} softness={0.68} scale={1.02} flow={1.4} speed={0.38} grain={0.025} variation={0.18} mouseInteraction={!reduced} scrambleRadius={0.38} clickEffect="wave" intro dpr={mobile?1:1.15}/><div className="app-content"><GlowCursor className="site-cursor" color="#ffe4a0" secondaryColor="#d92b45" intensity={mobile?0.7:0.92} trailWidth={mobile?1.7:2.45} linger={mobile?0.55:2.1} glow={0.88} hotspot={0.8} followSpeed={0.9} grain={0.015} clickBurst quality={mobile?"low":"high"} theme="dark" maxDevicePixelRatio={1.35} enabled={!mobile&&!reduced}><Header route={route}/><main id="main" className="page">{content}</main>{route!=="about"&&<Footer/>}</GlowCursor></div></div>;
+ return <div className="app-shell"><a className="skip-link" href="#main">Skip to main content</a><RippleDistortion className="site-water" src={asset("assets/smun-ripple-field.svg")} brushSize={mobile?104:170} strength={mobile?0.11:0.17} swirl={0.82} rings={4} spread={5.2} fade={3.2} spacing={mobile?24:13} dispersion={0.035} glint={0.16} tint="#d92b45" highlightColor="#ffe4a0" tintAmount={0.14} grayscale={false} trigger="both" quality={mobile?"low":"medium"} enabled={!reduced}/><GradientASCII className="ambient-ascii" colors={["#3d0d1b","#87172c","#d92b45","#d7a64c","#ffe8aa"]} shape="eclipse" characters=" .:-=+*#" cellSize={mobile?13:18} density={mobile?0.58:0.68} glyphOpacity={0.82} gradientOpacity={0.74} glow={0.09} depthOfField={0.1} flicker={0.035} softness={0.68} scale={1.02} flow={1.4} speed={0.38} grain={0.025} variation={0.18} mouseInteraction={!reduced} scrambleRadius={0.38} clickEffect="wave" intro dpr={mobile?1:1.15}/><div className="app-content"><GlowCursor className="site-cursor" color="#ffe4a0" secondaryColor="#d92b45" intensity={mobile?0.7:0.92} trailWidth={mobile?1.7:2.45} linger={mobile?0.55:2.1} glow={0.88} hotspot={0.8} followSpeed={0.9} grain={0.015} clickBurst quality={mobile?"low":"high"} theme="dark" maxDevicePixelRatio={1.35} enabled={!mobile&&!reduced}><Header route={route}/><main id="main" className="page">{content}</main>{route!=="about"&&<Footer/>}</GlowCursor></div></div>;
 }
